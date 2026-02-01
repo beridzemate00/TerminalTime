@@ -41,9 +41,21 @@ export function secondsToHours(seconds: number): number {
 }
 
 /**
- * Format date to YYYY-MM-DD
+ * Format date to readable format
  */
-export function formatDate(date: Date): string {
+export function formatDate(date: Date | string): string {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+/**
+ * Format date to YYYY-MM-DD (ISO format)
+ */
+export function formatDateISO(date: Date): string {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
@@ -55,7 +67,7 @@ export function formatDate(date: Date): string {
  */
 export function getDateRange(period: 'today' | 'week' | 'month'): { start: string; end: string } {
     const now = new Date();
-    const end = formatDate(now);
+    const end = formatDateISO(now);
 
     let start: string;
 
@@ -66,12 +78,12 @@ export function getDateRange(period: 'today' | 'week' | 'month'): { start: strin
         case 'week':
             const weekAgo = new Date(now);
             weekAgo.setDate(weekAgo.getDate() - 7);
-            start = formatDate(weekAgo);
+            start = formatDateISO(weekAgo);
             break;
         case 'month':
             const monthAgo = new Date(now);
             monthAgo.setMonth(monthAgo.getMonth() - 1);
-            start = formatDate(monthAgo);
+            start = formatDateISO(monthAgo);
             break;
     }
 
