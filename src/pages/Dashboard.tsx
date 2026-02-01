@@ -4,25 +4,49 @@ import { TimerDisplay } from '../components/timer/TimerDisplay';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { useTimerStore } from '../stores/timerStore';
-import { sessionApi, projectApi } from '../lib/api';
+import { sessionApi, projectApi, statsApi, streakApi } from '../lib/api';
 import { formatDurationHuman } from '../lib/utils';
 import type { Project } from '../types';
 
 export const Dashboard: React.FC = () => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
+    const [todayTotal, setTodayTotal] = useState(0);
+    const [todaySessions, setTodaySessions] = useState(0);
+    const [currentStreak, setCurrentStreak] = useState(0);
     const { startTimer, status, elapsedSeconds } = useTimerStore();
 
     useEffect(() => {
-        loadProjects();
+        loadData();
     }, []);
 
-    const loadProjects = async () => {
+    const loadData = async () => {
         try {
-            const data = await projectApi.getAll(false);
-            setProjects(data);
+            const [projectsData, dailyStats, allSessions, streak] = await Promise.all([
+                projectApi.getAll(false),
+                statsApi.getDaily(1),
+                sessionApi.getAll(),
+                streakApi.getCurrent()
+            ]);
+
+            setProjects(projectsData);
+
+            // Today's total time
+            if (dailyStats.length > 0) {
+                setTodayTotal(dailyStats[0].total_seconds);
+            }
+
+            // Today's sessions count
+            const today = new Date().toISOString().split('T')[0];
+            const todaySessionsCount = allSessions.filter(s =>
+                s.start_time.startsWith(today)
+            ).length;
+            setTodaySessions(todaySessionsCount);
+
+            // Current streak
+            setCurrentStreak(streak || 0);
         } catch (error) {
-            console.error('Failed to load projects:', error);
+            console.error('Failed to load data:', error);
         } finally {
             setLoading(false);
         }
@@ -125,16 +149,16 @@ export const Dashboard: React.FC = () => {
                                 <div className="flex items-center justify-between">
                                     <span className="text-slate-600 dark:text-slate-400">Total Time</span>
                                     <span className="text-2xl font-bold text-primary-600">
-                                        {formatDurationHuman(elapsedSeconds)}
+                                        {formatDurationHuman(todayTotal + elapsedSeconds)}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-slate-600 dark:text-slate-400">Sessions</span>
-                                    <span className="text-2xl font-bold">0</span>
+                                    <span className="text-2xl font-bold">{todaySessions}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-slate-600 dark:text-slate-400">Current Streak</span>
-                                    <span className="text-2xl font-bold">🔥 0 days</span>
+                                    <span className="text-2xl font-bold">🔥 {currentStreak} days</span>
                                 </div>
                             </div>
                         </CardContent>
