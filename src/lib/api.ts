@@ -93,14 +93,15 @@ export const sessionApi = {
 // ============================================================================
 
 export const statsApi = {
-    getDaily: async (startDate: string, endDate: string): Promise<DailyStats[]> => {
+    getDaily: async (days: number): Promise<DailyStats[]> => {
+        const endDate = new Date().toISOString().split('T')[0];
+        const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
         return await invoke('get_daily_stats', { startDate, endDate });
     },
 
-    getByProject: async (
-        startDate: string,
-        endDate: string
-    ): Promise<ProjectStats[]> => {
+    getByProject: async (days: number): Promise<ProjectStats[]> => {
+        const endDate = new Date().toISOString().split('T')[0];
+        const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
         return await invoke('get_project_stats', { startDate, endDate });
     },
 };
@@ -114,21 +115,14 @@ export const pomodoroApi = {
         return await invoke('get_pomodoro_settings');
     },
 
-    updateSettings: async (
-        workDuration: number,
-        shortBreak: number,
-        longBreak: number,
-        cyclesBeforeLongBreak: number,
-        soundEnabled: boolean,
-        notificationsEnabled: boolean
-    ): Promise<void> => {
+    updateSettings: async (settings: Omit<PomodoroSettings, 'id'>): Promise<void> => {
         return await invoke('update_pomodoro_settings', {
-            workDuration,
-            shortBreak,
-            longBreak,
-            cyclesBeforeLongBreak,
-            soundEnabled,
-            notificationsEnabled,
+            workDuration: settings.work_duration,
+            shortBreak: settings.short_break,
+            longBreak: settings.long_break,
+            cyclesBeforeLongBreak: settings.cycles_before_long_break,
+            soundEnabled: settings.sound_enabled,
+            notificationsEnabled: settings.notifications_enabled,
         });
     },
 };
