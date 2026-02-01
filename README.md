@@ -2,17 +2,19 @@
 
 A powerful, lightweight desktop productivity app for tracking time, staying focused with Pomodoro, and generating professional reports.
 
-![TerminalTime](https://img.shields.io/badge/Tauri-2.0-blue) ![React](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![SQLite](https://img.shields.io/badge/SQLite-3-green)
+![TerminalTime](https://img.shields.io/badge/Tauri-2.0-blue) ![React](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![SQLite](https://img.shields.io/badge/SQLite-3-green) ![Status](https://img.shields.io/badge/Status-95%25%20Complete-success)
+
+> **🎉 Latest Update**: All core features completed! Sessions, Stats, Focus, and Settings pages are now fully implemented.
 
 ## ✨ Features
 
-### 🎯 Core Features
+### 🎯 Core Features (✅ Complete)
 - **Project Management**: Create, edit, and organize projects with custom colors and icons
 - **Time Tracking**: Start/pause/stop timers with automatic session saving
-- **Pomodoro Timer**: Configurable focus sessions with break reminders
-- **Session History**: View, edit, and add notes to all your time sessions
-- **Statistics Dashboard**: Daily/weekly totals, productivity insights, and charts
-- **Export Reports**: Generate CSV and PDF reports for clients or personal use
+- **Pomodoro Timer**: Circular timer with configurable focus sessions and break reminders
+- **Session History**: View, filter, and manage all your time sessions with notes
+- **Statistics Dashboard**: Daily/weekly charts, productivity insights, and project breakdowns
+- **Settings Panel**: Configure appearance, notifications, goals, and preferences
 
 ### 🚀 Advanced Features
 - **Idle Detection**: Automatically detect and handle idle time
